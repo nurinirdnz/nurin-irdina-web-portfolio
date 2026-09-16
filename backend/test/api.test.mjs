@@ -19,7 +19,7 @@ test('public portfolio is served from SQLite and static assets load',async t=>{
  await client.get('/').expect(200).expect('Content-Type',/html/);
  await client.get('/admin').expect(200);
  await client.get('/vendor/gsap.min.js').expect(200);
- await client.get('/assets/Nurin-Irdina-Resume.pdf').expect(200);
+ await client.get('/assets/favicon.svg').expect(200);
  await client.get('/backend/data/portfolio.json').expect(404);
  await client.get('/.env').expect(404);
 });
