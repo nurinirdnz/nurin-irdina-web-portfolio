@@ -1,0 +1,14 @@
+import 'dotenv/config';
+import { resolve,dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { openDatabase } from './database.mjs';
+import { createApp } from './app.mjs';
+const root=resolve(dirname(fileURLToPath(import.meta.url)),'../..');
+const port=Number(process.env.PORT)||3000;
+const production=process.env.NODE_ENV==='production';
+const origin=process.env.APP_ORIGIN||`http://localhost:${port}`;
+if(production&&!origin.startsWith('https://'))throw new Error('Production APP_ORIGIN must use HTTPS.');
+const db=openDatabase(resolve(root,process.env.DATABASE_PATH||'backend/data/portfolio.sqlite'));
+const app=createApp({db,adminPassword:process.env.ADMIN_PASSWORD,origin,production,frontend:resolve(root,'frontend'),trustProxy:Number(process.env.TRUST_PROXY)||0});
+const server=app.listen(port,'0.0.0.0',()=>console.log(`Portfolio: ${origin}\nAdmin inbox: ${origin}/admin`));
+for(const signal of ['SIGINT','SIGTERM'])process.on(signal,()=>server.close(()=>{db.close();process.exit(0);}));

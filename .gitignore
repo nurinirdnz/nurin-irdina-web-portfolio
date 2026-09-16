@@ -1,0 +1,28 @@
+# Dependencies and generated reports
+node_modules/
+coverage/
+*.log
+npm-debug.log*
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+.npmrc
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Runtime data (may contain contact messages and session hashes)
+backend/data/
+
+# Original resume contains private contact/reference details. Replace it with a
+# redacted public copy only if you intentionally want to publish it.
+frontend/assets/Nurin-Irdina-Resume.pdf
+
+# Local editor and operating-system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,17 @@
+node_modules
+.env*
+.npmrc
+.git
+.github
+backend/data/
+frontend/assets/Nurin-Irdina-Resume.pdf
+coverage
+*.log
+*.pem
+*.key
+*.p12
+*.pfx
+.vscode
+.idea
+.DS_Store
+Thumbs.db

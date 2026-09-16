@@ -1,0 +1,180 @@
+{
+  "email": "nurinirdnz@gmail.com",
+  "projects": [
+    {
+      "id": "jomdekan",
+      "name": "JomDekan",
+      "subtitle": "A better place to learn. Together.",
+      "category": "Full-stack · SaaS · AI",
+      "type": "fullstack",
+      "featured": true,
+      "color": "mint",
+      "stack": [
+        "React",
+        "TypeScript",
+        "Node.js",
+        "PostgreSQL",
+        "OpenAI API",
+        "Docker"
+      ],
+      "description": "A centralized academic resource and student collaboration platform for Malaysian university students. Learning materials, discussions, tutoring and AI-powered study tools come together in one moderated experience.",
+      "detail": "Built with a React and TypeScript frontend, a Node.js and Express REST API, and PostgreSQL. AI Resource Summary uses the OpenAI Responses API to analyze PDF, DOCX, image and text materials and produce structured study notes for PDF or DOCX export. Ask This Resource adds resource-grounded conversations with full-text retrieval, chunking, tool calling, persistent history and source citations.",
+      "features": [
+        "Academic resources, multi-file uploads and taxonomy",
+        "University, programme and subject search and filters",
+        "AI study summaries with PDF and DOCX export",
+        "Resource-grounded assistant with citations and excerpts",
+        "Persistent conversations, caching and AI cost controls",
+        "Discussions, favorites, collections and notifications",
+        "Tutoring, opportunities and admin moderation",
+        "JWT, refresh-token rotation, HttpOnly cookies and RBAC"
+      ],
+      "tools": "React · TypeScript · Vite · Tailwind CSS · React Router · TanStack Query · Zustand · Axios · React Hook Form · Zod · Lucide React · Node.js · Express · PostgreSQL · pg · JWT · bcrypt · OpenAI Responses API · Structured Outputs · Tool Calling · Full-Text Search · PDF Parse · Mammoth · PDFKit · DOCX · Docker Compose · Redis · S3-compatible storage · Helmet · CORS · CSP · Jest · Supertest · Vitest · React Testing Library · Playwright · ESLint · GitHub Actions · Swagger/OpenAPI · Pino · Nodemailer",
+      "skills": "Software architecture, full-stack development, retrieval and search, LLM applications, authentication, web security, automated testing and technical documentation.",
+      "url": "https://github.com/nurinirdnz/Jom-Dekan"
+    },
+    {
+      "id": "fitwus",
+      "name": "FitWUs",
+      "subtitle": "Small habits. A healthier everyday.",
+      "category": "Full-stack · HealthTech · AI",
+      "type": "fullstack",
+      "featured": true,
+      "color": "purple",
+      "stack": [
+        "React",
+        "JavaScript",
+        "Express",
+        "MySQL",
+        "LLM"
+      ],
+      "description": "An AI-powered fitness and wellness platform that brings nutrition, workouts, hydration and activity into a personalized dashboard.",
+      "detail": "A full-stack wellness SaaS platform with an LLM-powered health assistant that uses nutrition, workout and activity information to support personalized wellness recommendations. The system combines relational data modeling, REST APIs, secure authentication and user and administrator roles.",
+      "features": [
+        "Nutrition, hydration and physical activity tracking",
+        "Workout planning and progress analytics",
+        "Personalized AI health assistant",
+        "Calendar, notifications and recommendations",
+        "JWT authentication and role-based access",
+        "Password hashing, rate limiting and security headers"
+      ],
+      "tools": "React · JavaScript · HTML · CSS · Node.js · Express.js · MySQL · REST API · JWT · LLM API Integration",
+      "skills": "Full-stack development, database design, API integration, AI integration, prompt engineering, authentication and responsive UI/UX."
+    },
+    {
+      "id": "animals",
+      "name": "Animal Image Classification",
+      "subtitle": "Teaching machines to see.",
+      "category": "Machine learning · Computer vision",
+      "type": "ai",
+      "featured": true,
+      "color": "blue",
+      "stack": [
+        "Python",
+        "TensorFlow",
+        "Keras",
+        "Streamlit",
+        "CNN"
+      ],
+      "description": "A deep-learning image recognition application that identifies animal categories from uploaded images through an interactive web interface.",
+      "detail": "An image classification system using a trained neural-network model to predict animal categories. A Streamlit interface makes inference accessible through an interactive application, connecting model development with a practical user experience.",
+      "features": [
+        "Image upload and preprocessing",
+        "Neural-network animal category prediction",
+        "Interactive Streamlit interface",
+        "Model training and inference workflow"
+      ],
+      "tools": "Python · TensorFlow · Keras · Streamlit · NumPy · Convolutional Neural Networks · Image Processing",
+      "skills": "Machine learning, deep learning, computer vision, data preprocessing, model training and model deployment."
+    },
+    {
+      "id": "clinical",
+      "name": "Clinical Management System",
+      "subtitle": "Structured care starts with structured data.",
+      "category": "Web development · Database systems",
+      "type": "fullstack",
+      "stack": [
+        "PHP",
+        "Oracle",
+        "SQL",
+        "HTML",
+        "CSS"
+      ],
+      "description": "A database-driven web application for organizing patient and clinic information through structured CRUD operations.",
+      "detail": "A centralized clinic-record management system using Oracle SQL for relational database design, storage and queries, with PHP powering server-side logic and CRUD operations.",
+      "features": [
+        "Centralized clinic-related records",
+        "Create, read, update and delete workflows",
+        "Relational data storage and SQL queries"
+      ],
+      "tools": "PHP · Oracle Database · Oracle SQL · HTML · CSS",
+      "skills": "Database design, SQL, backend development, relational database management and data management."
+    },
+    {
+      "id": "preloved",
+      "name": "PreYourLoveds!",
+      "subtitle": "A second life for things worth loving.",
+      "category": "Java web development · E-commerce",
+      "type": "fullstack",
+      "stack": [
+        "Java",
+        "JSP",
+        "Servlets",
+        "MySQL",
+        "MVC"
+      ],
+      "description": "A Java e-commerce platform for listing, discovering and managing pre-loved products.",
+      "detail": "A web-based buying and selling system using JSP, Servlets and JavaBeans in an MVC architecture. MySQL provides persistent relational storage for application entities and transactions.",
+      "features": [
+        "Pre-loved product listing and discovery",
+        "Product management workflows",
+        "MVC separation of application responsibilities",
+        "Persistent relational storage"
+      ],
+      "tools": "Java · JSP · Java Servlets · JavaBeans · MySQL · HTML · CSS · MVC",
+      "skills": "Java web development, OOP, MVC architecture, database design, CRUD operations and session management."
+    },
+    {
+      "id": "pickupla",
+      "name": "PICKUPLA",
+      "subtitle": "From arrival to collection.",
+      "category": "C++ · Object-oriented programming",
+      "type": "desktop",
+      "stack": [
+        "C++",
+        "OOP",
+        "File handling"
+      ],
+      "description": "A parcel delivery and pickup management application built with C++.",
+      "detail": "Designed to simulate and manage parcel-related operations using object-oriented design, data validation, structured program flow and data management.",
+      "features": [
+        "Parcel delivery and pickup operations",
+        "Structured data management",
+        "Input validation and object-oriented design"
+      ],
+      "tools": "C++ · Object-Oriented Programming · File/Data Handling",
+      "skills": "C++ programming, problem solving, algorithms, data structures, program design and input validation."
+    },
+    {
+      "id": "todo",
+      "name": "To-Do List Manager",
+      "subtitle": "Make room for what matters.",
+      "category": "Java · Desktop application",
+      "type": "desktop",
+      "stack": [
+        "Java",
+        "Swing",
+        "OOP"
+      ],
+      "description": "A desktop productivity application for creating and organizing personal tasks.",
+      "detail": "A Java Swing task manager with an interactive graphical interface. The project applies event-driven programming and object-oriented design to everyday task organization.",
+      "features": [
+        "Create and organize to-do items",
+        "Interactive desktop GUI",
+        "Event-driven task management"
+      ],
+      "tools": "Java · Java Swing · OOP · GUI Development",
+      "skills": "Java programming, GUI development, event-driven programming, software design and desktop application development."
+    }
+  ]
+}
