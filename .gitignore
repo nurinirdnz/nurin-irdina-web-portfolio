@@ -17,9 +17,10 @@ npm-debug.log*
 # Runtime data (may contain contact messages and session hashes)
 backend/data/
 
-# Original resume contains private contact/reference details. Replace it with a
-# redacted public copy only if you intentionally want to publish it.
-frontend/assets/Nurin-Irdina-Resume.pdf
+# Original resume contains private contact/reference details (address, phone,
+# referee emails). Kept outside frontend/ so express.static can never serve it;
+# resume.html is the redacted public copy. Do not move this back into frontend/.
+private/
 
 # Local editor and operating-system files
 .vscode/

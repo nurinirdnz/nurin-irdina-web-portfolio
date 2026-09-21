@@ -4,7 +4,7 @@ node_modules
 .git
 .github
 backend/data/
-frontend/assets/Nurin-Irdina-Resume.pdf
+private/
 coverage
 *.log
 *.pem

@@ -15,16 +15,27 @@
  const $ = s => document.querySelector(s);
  // All values below are author-controlled local content, never user input.
  const tags = values => values.map(s=>`<span>${s}</span>`).join('');
- const cat = `<span aria-hidden="true">CNN</span>`;
+ const node = (n,title,sub) => `<div class="arch-node"><span>0${n}</span><div><strong>${title}</strong><small>${sub}</small></div></div>`;
+ const diagram = (caption,...nodes) => `<div class="architecture">${nodes.map((n,i)=>(i?'<div class="arch-connector"></div>':'')+n).join('')}</div><p class="arch-caption">${caption}</p>`;
  const previews = {
- jomdekan: `<div class="preview-title">A little clarity.<br>A lot of possibility.<small>THE STUDENT HUB</small></div><div class="mock-browser"><div class="mock-top"><i></i><i></i><i></i><span>JomDekan / dashboard concept</span></div><div class="mock-body"><div class="mock-side"><div class="mock-logo">JomDekan✳</div><p>⌂ &nbsp; Overview</p><p>▤ &nbsp; Materials</p><p>◎ &nbsp; Discussions</p><p>✦ &nbsp; AI study tools</p><p>♡ &nbsp; Saved</p></div><div class="mock-main"><small>YOUR LEARNING SPACE</small><h4>A good day to learn, Nurin ✦</h4><div class="mock-banner"><div><b>Your next idea starts here.</b><br>Explore. Connect. Keep growing.</div><b>✳</b></div><div class="mock-tiles"><div class="mock-tile"><i>▤</i>Academic materials<small>Find your next resource ↗</small></div><div class="mock-tile"><i>✦</i>Study with AI<small>Make sense of the details ↗</small></div><div class="mock-tile"><i>◎</i>Your community<small>Learn better, together ↗</small></div></div></div></div></div>`,
- fitwus:`<div class="fit-app"><header><b>FitWUs ✦</b><span>YOUR DAILY BALANCE</span></header><h4>Feel good. Keep going.</h4><div class="fit-content"><div class="fitness-ring"></div><div class="fit-chart">${[32,59,45,76,52,82,62].map(h=>`<i style="height:${h}%"></i>`).join('')}</div></div></div>`,
- animals:`<div class="animal-app"><p>VISION LAB / ANIMAL CLASSIFICATION</p><div class="animal-flex"><div class="animal-image">${cat}</div><div class="animal-result">IMAGE ANALYSIS<strong>Hello, feline.</strong><div class="confidence"></div><small>ILLUSTRATIVE PREDICTION</small></div></div></div>`
+ jomdekan: diagram('Simplified request flow. Full architecture in the case study below.',
+  node(1,'React + TypeScript','Client interface'),
+  node(2,'Node.js + Express','REST API &amp; auth'),
+  node(3,'PostgreSQL','Resources, discussions, users'),
+  node(4,'OpenAI Responses API','AI summaries &amp; resource Q&amp;A')),
+ fitwus: diagram('Simplified request flow.',
+  node(1,'React','Wellness dashboard'),
+  node(2,'Express + MySQL','REST API &amp; data'),
+  node(3,'LLM assistant','Personalized guidance')),
+ animals: diagram('Simplified inference flow.',
+  node(1,'Image input','Upload &amp; preprocess'),
+  node(2,'CNN model','TensorFlow / Keras'),
+  node(3,'Streamlit UI','Prediction output'))
  };
- $('#featured-grid').innerHTML = projects.filter(p=>p.featured).map((p,i)=>`<button class="project-card tilt reveal" data-project="${p.id}" data-cursor="VIEW CASE" aria-label="View ${p.name} project details"><div class="project-visual"><div class="visual-meta"><span>0${i+1} / ${p.category.toUpperCase()}</span><span>${i===0?'FEATURED PROJECT':'SELECTED WORK'}</span></div><div aria-hidden="true">${previews[p.id]}</div><div class="hover-tags">${tags(p.stack)}</div></div><div class="project-info"><div><h3>${p.name}</h3><p>${p.subtitle}</p></div><span class="round-arrow" aria-hidden="true">↗</span></div></button>`).join('');
+ $('#featured-grid').innerHTML = projects.filter(p=>p.featured).map((p,i)=>`<button class="project-card reveal" data-project="${p.id}" aria-label="View ${p.name} project details"><div class="project-visual${i===0?'':' compact'}"><div class="visual-meta"><span>0${i+1} / ${p.category.toUpperCase()}</span><span>${i===0?'FEATURED PROJECT':'SELECTED WORK'}</span></div><div aria-hidden="true">${previews[p.id]}</div><div class="hover-tags">${tags(p.stack)}</div></div><div class="project-info"><div><h3>${p.name}</h3><p>${p.subtitle}</p></div><span class="round-arrow" aria-hidden="true">↗</span></div></button>`).join('');
  if(loadError) $('#featured-grid').innerHTML='<p role="alert">Projects could not load. Please refresh the page to try again.</p>';
  function renderArchive(filter='all') {
-  $('#archive').innerHTML = projects.filter(p=>!p.featured && (filter==='all'||p.type===filter)).map(p=>`<button class="archive-item" data-project="${p.id}" data-cursor="VIEW CASE" aria-label="View ${p.name} project details"><span class="index">0${projects.indexOf(p)+1}</span><div><h4>${p.name}</h4><p>${p.category}</p></div><span class="archive-stack">${p.stack.slice(0,3).join(' / ')}</span><span class="round-arrow" aria-hidden="true">↗</span></button>`).join('');
+  $('#archive').innerHTML = projects.filter(p=>!p.featured && (filter==='all'||p.type===filter)).map(p=>`<button class="archive-item" data-project="${p.id}" aria-label="View ${p.name} project details"><span class="index">0${projects.indexOf(p)+1}</span><div><h4>${p.name}</h4><p>${p.category}</p></div><span class="archive-stack">${p.stack.slice(0,3).join(' / ')}</span><span class="round-arrow" aria-hidden="true">↗</span></button>`).join('');
  }
  renderArchive();
  document.querySelectorAll('[data-filter]').forEach(button=>button.addEventListener('click',()=>{
