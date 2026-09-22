@@ -56,6 +56,9 @@ export function createApp({
       ? createTransport({
           service: "gmail",
           auth: { user: gmailUser, pass: gmailAppPassword },
+          // Force IPv4: some hosts (e.g. Render) have no outbound IPv6 route, and
+          // Node can otherwise pick Gmail's IPv6 address first and fail with ENETUNREACH.
+          family: 4,
         })
       : null;
   if (!mailer)
