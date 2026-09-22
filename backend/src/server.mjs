@@ -20,8 +20,8 @@ const app = createApp({
   frontend: resolve(root, "frontend"),
   trustProxy: Number(process.env.TRUST_PROXY) || 0,
   notifyEmail: process.env.NOTIFY_EMAIL,
-  gmailUser: process.env.GMAIL_USER,
-  gmailAppPassword: process.env.GMAIL_APP_PASSWORD,
+  brevoApiKey: process.env.BREVO_API_KEY,
+  brevoSenderEmail: process.env.BREVO_SENDER_EMAIL,
 });
 const server = app.listen(port, "0.0.0.0", () =>
   console.log(`Portfolio: ${origin}\nAdmin inbox: ${origin}/admin`),

@@ -2,7 +2,6 @@ import express from "express";
 import helmet from "helmet";
 import { rateLimit } from "express-rate-limit";
 import { z } from "zod";
-import { createTransport } from "nodemailer";
 import {
   randomBytes,
   randomUUID,
@@ -41,30 +40,63 @@ export function createApp({
   frontend,
   trustProxy = 0,
   notifyEmail,
-  gmailUser,
-  gmailAppPassword,
+  brevoApiKey,
+  brevoSenderEmail,
 }) {
   if (!adminPassword || adminPassword.length < 16)
     throw new Error(
       "ADMIN_PASSWORD must contain at least 16 characters. Run npm run setup.",
     );
   // Email notification is optional: only wired up when all three settings are present.
-  // A missing or failing mailer never blocks a contact submission — the database write is
+  // Sent over Brevo's HTTPS API rather than raw SMTP — some hosts (e.g. Render's free
+  // tier) block or can't route outbound SMTP, but HTTPS is never blocked.
+  // A missing or failing send never blocks a contact submission — the database write is
   // the source of truth, and messages always remain visible in /admin regardless.
-  const mailer =
-    notifyEmail && gmailUser && gmailAppPassword
-      ? createTransport({
-          service: "gmail",
-          auth: { user: gmailUser, pass: gmailAppPassword },
-          // Force IPv4: some hosts (e.g. Render) have no outbound IPv6 route, and
-          // Node can otherwise pick Gmail's IPv6 address first and fail with ENETUNREACH.
-          family: 4,
-        })
-      : null;
-  if (!mailer)
+  const mailerEnabled = Boolean(notifyEmail && brevoApiKey && brevoSenderEmail);
+  if (!mailerEnabled)
     console.log(
-      "Email notifications disabled: set NOTIFY_EMAIL, GMAIL_USER and GMAIL_APP_PASSWORD to enable them.",
+      "Email notifications disabled: set NOTIFY_EMAIL, BREVO_API_KEY and BREVO_SENDER_EMAIL to enable them.",
     );
+  async function sendNotification({ id, name, email, message }) {
+    const submitted = new Date().toLocaleString("en-MY", {
+      dateStyle: "medium",
+      timeStyle: "short",
+      timeZone: "Asia/Kuala_Lumpur",
+    });
+    const text = `New portfolio contact message\n${"─".repeat(32)}\n\nFrom:      ${name}\nEmail:     ${email}\nSubmitted: ${submitted}\n\nMessage:\n${message}\n\n${"─".repeat(32)}\nReply directly to this email to respond to ${name}.`;
+    const html = `<div style="font-family:Segoe UI,Arial,sans-serif;max-width:520px;margin:0 auto;color:#302a20">
+<h2 style="margin:0 0 4px;font-size:1.1rem;color:#4d3e27">New portfolio contact message</h2>
+<p style="margin:0 0 20px;font-size:.8rem;color:#625c50">Submitted ${submitted}</p>
+<table style="width:100%;border-collapse:collapse;margin-bottom:20px">
+<tr><td style="padding:6px 0;font-size:.78rem;color:#625c50;width:80px">Name</td><td style="padding:6px 0;font-size:.9rem">${escapeHTML(name)}</td></tr>
+<tr><td style="padding:6px 0;font-size:.78rem;color:#625c50">Email</td><td style="padding:6px 0;font-size:.9rem"><a href="mailto:${escapeHTML(email)}" style="color:#4d3e27">${escapeHTML(email)}</a></td></tr>
+</table>
+<p style="margin:0 0 8px;font-size:.78rem;color:#625c50;text-transform:uppercase;letter-spacing:.05em">Message</p>
+<p style="margin:0 0 20px;padding:16px;background:#eae7de;border-radius:6px;font-size:.92rem;line-height:1.6;white-space:pre-wrap">${escapeHTML(message)}</p>
+<p style="margin:0;font-size:.76rem;color:#625c50">Reply directly to this email to respond to ${escapeHTML(name)}.</p>
+</div>`;
+    const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "content-type": "application/json",
+        "api-key": brevoApiKey,
+      },
+      body: JSON.stringify({
+        sender: { email: brevoSenderEmail, name: "Portfolio Contact Form" },
+        to: [{ email: notifyEmail }],
+        replyTo: { email, name },
+        subject: `New portfolio message from ${name}`,
+        textContent: text,
+        htmlContent: html,
+      }),
+    });
+    if (!response.ok) {
+      const body = await response.text();
+      throw new Error(`Brevo API responded ${response.status}: ${body}`);
+    }
+    console.log(`Contact notification email sent to ${notifyEmail} for message ${id}.`);
+  }
   const app = express();
   app.disable("x-powered-by");
   app.set("trust proxy", trustProxy);
@@ -141,44 +173,13 @@ export function createApp({
         id,
         message: "Your message has been received. Thank you for reaching out.",
       });
-    if (mailer) {
-      const submitted = new Date().toLocaleString("en-MY", {
-        dateStyle: "medium",
-        timeStyle: "short",
-        timeZone: "Asia/Kuala_Lumpur",
-      });
-      const text = `New portfolio contact message\n${"─".repeat(32)}\n\nFrom:      ${name}\nEmail:     ${email}\nSubmitted: ${submitted}\n\nMessage:\n${message}\n\n${"─".repeat(32)}\nReply directly to this email to respond to ${name}.`;
-      const html = `<div style="font-family:Segoe UI,Arial,sans-serif;max-width:520px;margin:0 auto;color:#302a20">
-<h2 style="margin:0 0 4px;font-size:1.1rem;color:#4d3e27">New portfolio contact message</h2>
-<p style="margin:0 0 20px;font-size:.8rem;color:#625c50">Submitted ${submitted}</p>
-<table style="width:100%;border-collapse:collapse;margin-bottom:20px">
-<tr><td style="padding:6px 0;font-size:.78rem;color:#625c50;width:80px">Name</td><td style="padding:6px 0;font-size:.9rem">${escapeHTML(name)}</td></tr>
-<tr><td style="padding:6px 0;font-size:.78rem;color:#625c50">Email</td><td style="padding:6px 0;font-size:.9rem"><a href="mailto:${escapeHTML(email)}" style="color:#4d3e27">${escapeHTML(email)}</a></td></tr>
-</table>
-<p style="margin:0 0 8px;font-size:.78rem;color:#625c50;text-transform:uppercase;letter-spacing:.05em">Message</p>
-<p style="margin:0 0 20px;padding:16px;background:#eae7de;border-radius:6px;font-size:.92rem;line-height:1.6;white-space:pre-wrap">${escapeHTML(message)}</p>
-<p style="margin:0;font-size:.76rem;color:#625c50">Reply directly to this email to respond to ${escapeHTML(name)}.</p>
-</div>`;
-      mailer
-        .sendMail({
-          from: gmailUser,
-          to: notifyEmail,
-          replyTo: email,
-          subject: `New portfolio message from ${name}`,
-          text,
-          html,
-        })
-        .then(() =>
-          console.log(
-            `Contact notification email sent to ${notifyEmail} for message ${id}.`,
-          ),
-        )
-        .catch((error) =>
-          console.error(
-            `Contact notification email failed to send for message ${id} (message is still saved):`,
-            error.message,
-          ),
-        );
+    if (mailerEnabled) {
+      sendNotification({ id, name, email, message }).catch((error) =>
+        console.error(
+          `Contact notification email failed to send for message ${id} (message is still saved):`,
+          error.message,
+        ),
+      );
     }
   });
   const cookieOptions = {
