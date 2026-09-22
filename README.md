@@ -2,16 +2,19 @@
 
 [![CI](https://github.com/nurinirdnz/nurin-irdina-web-portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/nurinirdnz/nurin-irdina-web-portfolio/actions/workflows/ci.yml)
 
+**Live:** [nurin-irdina-portfolio.onrender.com](https://nurin-irdina-portfolio.onrender.com)
+
 A full-stack personal portfolio showcasing my software projects, technical skills, education, leadership experience, and professional journey.
 
 The application includes a responsive portfolio frontend, an Express REST API, persistent SQLite storage, a contact form, and a password-protected admin inbox.
 
 ## Features
 
-- Responsive dark-themed portfolio interface
-- Seven software and AI project showcases
+- Light/dark theme toggle with system-preference detection and no flash-of-wrong-theme
+- Seven software and AI project showcases, each with a labeled architecture summary
+- Public résumé page (`resume.html`) with verified content, print/PDF-friendly
 - Education, work, leadership, and volunteering timeline
-- Interactive animations, particles, custom cursor, and card effects
+- Scroll-reveal animations, hover states, and active-section navigation, all respecting `prefers-reduced-motion`
 - Project information loaded from SQLite through a REST API
 - Contact form with server-side validation
 - Persistent contact-message storage
@@ -28,11 +31,8 @@ The application includes a responsive portfolio frontend, an Express REST API, p
 ### Frontend
 
 - HTML5
-- CSS3
-- JavaScript
-- Tailwind CSS
-- GSAP and ScrollTrigger
-- Lenis smooth scrolling
+- CSS3 (design tokens, no build step)
+- Vanilla JavaScript (dependency-free — no animation or scroll libraries)
 
 ### Backend
 
@@ -50,6 +50,7 @@ The application includes a responsive portfolio frontend, an Express REST API, p
 - GitHub Actions
 - Dependabot
 - Docker
+- Render (deployment, via `render.yaml` blueprint)
 
 ## Getting Started
 
@@ -98,7 +99,7 @@ This application must run through its Node.js server. Opening `index.html` direc
 The application uses the following environment variables:
 
 | Variable         | Purpose                                                  |
-| ---------------- | -------------------------------------------------------- |
+| ---------------- | --------------------------------------------------------- |
 | `PORT`           | Server port; defaults to `3000`                          |
 | `APP_ORIGIN`     | Exact public application origin without a trailing slash |
 | `ADMIN_PASSWORD` | Private admin password with at least 16 characters       |
@@ -145,32 +146,39 @@ npm run db:seed  # Update project records without deleting messages
 ```text
 frontend/
   index.html              Main portfolio page
+  resume.html             Public résumé page
   admin.html              Private admin inbox
-  styles.css              Portfolio styles
+  styles.css              Portfolio styles (Elegant Evening design tokens)
   admin.css               Admin interface styles
   js/
-    app.js                Project loading and contact form
-    admin.js              Authentication and inbox management
-    effects.js            Animations and visual effects
-  assets/                 Public portfolio assets
-  vendor/                 Local frontend dependencies
+    theme.js               Light/dark theme toggle (blocking, pre-paint)
+    app.js                 Project loading and contact form
+    admin.js                Authentication and inbox management
+    effects.js               Scroll reveal, mobile nav, active-section tracking
+  assets/                  Public portfolio assets
+  vendor/                  Locally vendored dependencies (kept for reference/CI)
 
 backend/
   src/
-    server.mjs            Server startup and configuration
-    app.mjs               API routes and security middleware
-    database.mjs          SQLite schema and initialization
+    server.mjs             Server startup and configuration
+    app.mjs                 API routes and security middleware
+    database.mjs             SQLite schema and initialization
   seed/
-    portfolio.json        Portfolio project content
+    portfolio.json          Portfolio project content
   test/
-    api.test.mjs          Integration tests
-  setup.mjs               Local environment generator
-  seed.mjs                Database seed updater
+    api.test.mjs             Integration tests
+  setup.mjs                 Local environment generator
+  seed.mjs                   Database seed updater
+
+private/                   Original résumé PDF (private contact/reference details;
+                            excluded from Git and Docker; never served by the app)
+
+render.yaml                Render deployment blueprint
 
 .github/
   workflows/
-    ci.yml                Automated checks and tests
-  dependabot.yml          Dependency-update monitoring
+    ci.yml                  Automated checks and tests
+  dependabot.yml             Dependency-update monitoring
 ```
 
 ## Contact and Admin Workflow
@@ -192,7 +200,7 @@ Messages are stored in the database and are not automatically emailed.
 The application provides the following main endpoints:
 
 | Method  | Endpoint                  | Purpose                               |
-| ------- | ------------------------- | ------------------------------------- |
+| ------- | -------------------------- | --------------------------------------- |
 | `GET`   | `/api/health`             | Check application and database health |
 | `GET`   | `/api/portfolio`          | Retrieve portfolio project data       |
 | `POST`  | `/api/contact`            | Submit a contact message              |
@@ -232,7 +240,7 @@ Current security verification:
 
 ## Private Files
 
-The following files are intentionally excluded from the repository:
+The following files are intentionally excluded from the repository and from the Docker image:
 
 - `.env` and environment variants
 - SQLite database and WAL files
@@ -240,9 +248,11 @@ The following files are intentionally excluded from the repository:
 - npm credentials
 - Private keys and certificates
 - Logs and coverage output
-- Original résumé containing private contact and reference information
+- `private/` — the original résumé PDF, which contains a home address, phone number,
+  and reference contact details not meant to be public
 
-The public interface provides a “Request my resume” link instead of publishing the original private PDF.
+The public interface serves `resume.html` instead — a résumé page built from the same
+verified content, with personal contact/reference details intentionally omitted.
 
 ## Docker
 
@@ -268,10 +278,25 @@ The SQLite database is stored in a named Docker volume and survives ordinary con
 
 ## Deployment
 
-Deploy this project to a host that supports:
+### Render (current live host)
+
+This repo includes `render.yaml`, a Blueprint that deploys the Docker image directly:
+
+1. Render dashboard → **New** → **Blueprint** → select this repository.
+2. Set the two secrets it prompts for: `APP_ORIGIN` (your assigned `https://*.onrender.com`
+   URL, or a custom domain) and `ADMIN_PASSWORD` (16+ characters).
+3. Deploy. Render auto-redeploys on every push to `main`.
+
+Render's free tier has no persistent disk, so `backend/data/portfolio.sqlite` resets on
+each redeploy — contact-form messages won't survive a redeploy on the free plan. Upgrading
+to a paid instance type with an attached disk removes this limitation.
+
+### Other hosts
+
+Deploy this project to any host that supports:
 
 - Node.js 24 or newer
-- Persistent writable storage
+- Persistent writable storage (if message persistence matters)
 - HTTPS
 - Long-running Node.js services or Docker containers
 
@@ -293,4 +318,5 @@ This is not a static-only website because the contact form, database, and admin 
 **Nurin Irdina Safiah**
 
 - GitHub: [@nurinirdnz](https://github.com/nurinirdnz)
+- LinkedIn: [nurinirdinaz](https://www.linkedin.com/in/nurinirdinaz/)
 - Email: [nurinirdnz@gmail.com](mailto:nurinirdnz@gmail.com)
