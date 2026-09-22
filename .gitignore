@@ -22,6 +22,10 @@ backend/data/
 # resume.html is the redacted public copy. Do not move this back into frontend/.
 private/
 
+# Local scratch tooling, not part of the app (e.g. one-off scripts with their
+# own node_modules) — keep it off disk from git's perspective regardless of size.
+tmp/
+
 # Local editor and operating-system files
 .vscode/
 .idea/
