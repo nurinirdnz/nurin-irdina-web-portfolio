@@ -9,6 +9,6 @@ const production=process.env.NODE_ENV==='production';
 const origin=process.env.APP_ORIGIN||`http://localhost:${port}`;
 if(production&&!origin.startsWith('https://'))throw new Error('Production APP_ORIGIN must use HTTPS.');
 const db=openDatabase(resolve(root,process.env.DATABASE_PATH||'backend/data/portfolio.sqlite'));
-const app=createApp({db,adminPassword:process.env.ADMIN_PASSWORD,origin,production,frontend:resolve(root,'frontend'),trustProxy:Number(process.env.TRUST_PROXY)||0});
+const app=createApp({db,adminPassword:process.env.ADMIN_PASSWORD,origin,production,frontend:resolve(root,'frontend'),trustProxy:Number(process.env.TRUST_PROXY)||0,notifyEmail:process.env.NOTIFY_EMAIL,gmailUser:process.env.GMAIL_USER,gmailAppPassword:process.env.GMAIL_APP_PASSWORD});
 const server=app.listen(port,'0.0.0.0',()=>console.log(`Portfolio: ${origin}\nAdmin inbox: ${origin}/admin`));
 for(const signal of ['SIGINT','SIGTERM'])process.on(signal,()=>server.close(()=>{db.close();process.exit(0);}));

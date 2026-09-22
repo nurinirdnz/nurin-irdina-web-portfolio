@@ -17,6 +17,7 @@ The application includes a responsive portfolio frontend, an Express REST API, p
 - Scroll-reveal animations, hover states, and active-section navigation, all respecting `prefers-reduced-motion`
 - Project information loaded from SQLite through a REST API
 - Contact form with server-side validation
+- Optional email notification for new contact messages (reply-to set to the sender)
 - Persistent contact-message storage
 - Password-protected admin inbox
 - Message status management
@@ -106,6 +107,12 @@ The application uses the following environment variables:
 | `DATABASE_PATH`  | Path to the SQLite database                              |
 | `NODE_ENV`       | Use `development` locally and `production` when deployed |
 | `TRUST_PROXY`    | Number of trusted reverse proxies; normally `0` locally  |
+| `NOTIFY_EMAIL`   | Optional — email address that receives new contact-form messages |
+| `GMAIL_USER`     | Optional — Gmail address used to send that notification  |
+| `GMAIL_APP_PASSWORD` | Optional — [Gmail App Password](https://myaccount.google.com/apppasswords) for `GMAIL_USER` (requires 2-Step Verification) |
+
+Leave the three notification variables blank to disable email notifications entirely —
+messages still save to the database and remain visible in `/admin` either way.
 
 Example development configuration:
 
