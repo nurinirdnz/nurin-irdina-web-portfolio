@@ -11,10 +11,10 @@ The application includes a responsive portfolio frontend, an Express REST API, p
 ## Features
 
 - Light/dark theme toggle with system-preference detection and no flash-of-wrong-theme
-- Seven software and AI project showcases, each with a labeled architecture summary
+- Three featured engineering projects with visible stacks and capabilities, plus four compact project summaries
 - Public résumé page (`resume.html`) with verified content, print/PDF-friendly
 - Education, work, leadership, and volunteering timeline
-- Scroll-reveal animations, hover states, and active-section navigation, all respecting `prefers-reduced-motion`
+- Immediate content visibility, keyboard-friendly mobile navigation, and reduced-motion support
 - Project information loaded from SQLite through a REST API
 - Contact form with server-side validation
 - Optional email notification for new contact messages (reply-to set to the sender)
@@ -143,7 +143,7 @@ npm start        # Start the production-style server
 npm run dev      # Start the server with automatic restarts
 npm run setup    # Generate the private local environment file
 npm run check    # Validate JavaScript syntax
-npm test         # Run the integration test suite
+npm test         # Run backend integration and frontend interaction tests
 npm run build    # Rebuild bundled frontend dependencies
 npm run db:seed  # Update project records without deleting messages
 ```
@@ -155,13 +155,13 @@ frontend/
   index.html              Main portfolio page
   resume.html             Public résumé page
   admin.html              Private admin inbox
-  styles.css              Portfolio styles (Elegant Evening design tokens)
+  styles.css              Shared portfolio, résumé and admin design tokens
   admin.css               Admin interface styles
   js/
     theme.js               Light/dark theme toggle (blocking, pre-paint)
     app.js                 Project loading and contact form
     admin.js                Authentication and inbox management
-    effects.js               Scroll reveal, mobile nav, active-section tracking
+    effects.js               Mobile nav and active-section tracking (independent of API loading)
   assets/                  Public portfolio assets
   vendor/                  Locally vendored dependencies (kept for reference/CI)
 
@@ -187,6 +187,10 @@ render.yaml                Render deployment blueprint
     ci.yml                  Automated checks and tests
   dependabot.yml             Dependency-update monitoring
 ```
+
+## Frontend design
+
+See [the redesign review](docs/frontend-redesign.md) for the content audit, information architecture, responsive decisions, validation results, and remaining browser checks. Frontend regression tests in `test/frontend.test.mjs` exercise event handling and API payloads with a small DOM boundary fake; they do not replace browser rendering or accessibility testing.
 
 ## Contact and Admin Workflow
 
