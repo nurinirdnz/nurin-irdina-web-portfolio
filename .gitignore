@@ -18,8 +18,8 @@ npm-debug.log*
 backend/data/
 
 # Original resume contains private contact/reference details (address, phone,
-# referee emails). Kept outside frontend/ so express.static can never serve it;
-# resume.html is the redacted public copy. Do not move this back into frontend/.
+# referee emails). Kept outside frontend/ so express.static can never serve it.
+# There is no public résumé page. Do not move this back into frontend/.
 private/
 
 # Local scratch tooling, not part of the app (e.g. one-off scripts with their

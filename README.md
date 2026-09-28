@@ -11,10 +11,9 @@ The application includes a responsive portfolio frontend, an Express REST API, p
 ## Features
 
 - Light/dark theme toggle with system-preference detection and no flash-of-wrong-theme
-- Three featured engineering projects with visible stacks and capabilities, plus four compact project summaries
-- Public résumé page (`resume.html`) with verified content, print/PDF-friendly
-- Education, work, leadership, and volunteering timeline
-- Immediate content visibility, keyboard-friendly mobile navigation, and reduced-motion support
+- Interactive rolling stack for three featured engineering projects, plus four compact project summaries
+- Professional experience, leadership, and volunteering within the main portfolio
+- Keyboard, pointer and swipe project navigation with reduced-motion support
 - Project information loaded from SQLite through a REST API
 - Contact form with server-side validation
 - Optional email notification for new contact messages (reply-to set to the sender)
@@ -153,9 +152,8 @@ npm run db:seed  # Update project records without deleting messages
 ```text
 frontend/
   index.html              Main portfolio page
-  resume.html             Public résumé page
   admin.html              Private admin inbox
-  styles.css              Shared portfolio, résumé and admin design tokens
+  styles.css              Shared portfolio and admin design tokens
   admin.css               Admin interface styles
   js/
     theme.js               Light/dark theme toggle (blocking, pre-paint)
@@ -262,8 +260,8 @@ The following files are intentionally excluded from the repository and from the 
 - `private/` — the original résumé PDF, which contains a home address, phone number,
   and reference contact details not meant to be public
 
-The public interface serves `resume.html` instead — a résumé page built from the same
-verified content, with personal contact/reference details intentionally omitted.
+Verified professional experience appears on the main portfolio page. The separate
+résumé page has been removed; private contact/reference details remain unpublished.
 
 ## Docker
 

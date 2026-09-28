@@ -3,19 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f7f7f2" />
+    <meta name="theme-color" content="#f7f7f9" />
     <meta
       name="description"
       content="Nurin Irdina — Computer Science student at UiTM Shah Alam. Full-stack systems, practical AI, seven software projects, and student leadership."
     />
     <title>Nurin Irdina | Website Portfolio</title>
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="assets/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="styles.css" />
     <script src="js/theme.js"></script>
+    <script src="js/loading.js"></script>
     <script src="js/app.js" defer></script>
     <script src="js/effects.js" defer></script>
+    <script src="js/reveal.js" defer></script>
   </head>
   <body class="portfolio">
+    <div class="animated-gradient" aria-hidden="true">
+      <canvas class="plasma-canvas"></canvas>
+    </div>
     <a class="skip" href="#main">Skip to content</a>
     <header class="header">
       <a class="brand" href="#home" aria-label="Nurin Irdina — home"
@@ -36,7 +42,6 @@
           aria-pressed="false"
         >
           <span aria-hidden="true">◐</span></button
-        ><a class="nav-resume" href="resume.html">Résumé ↗</a
         ><button
           id="menu-toggle"
           class="icon-button menu-toggle"
@@ -68,9 +73,6 @@
             <div class="hero-actions">
               <a class="button primary" href="#work"
                 >Explore projects <span aria-hidden="true">↓</span></a
-              >
-              <a class="button secondary" href="resume.html"
-                >View résumé <span aria-hidden="true">↗</span></a
               >
             </div>
             <div class="socials">
@@ -107,10 +109,6 @@
                 </dd>
               </div>
             </dl>
-            <a class="text-link" href="resume.html"
-              >View academic record
-              <span aria-hidden="true">↗</span></a
-            >
           </aside>
         </div>
       </section>
@@ -144,8 +142,7 @@
           ><p>
             Projects: JomDekan, FitWUs, Animal Image Classification, Clinical
             Management System, PreYourLoveds!, PICKUPLA, and To-Do List Manager.
-            Enable JavaScript for technical details, or
-            <a href="resume.html">view my résumé</a>.
+            Enable JavaScript for technical details.
           </p></noscript
         >
       </section>
@@ -164,109 +161,120 @@
             more accessible.
           </p>
         </div>
-        <div class="experience-list">
-          <article>
-            <span class="eyebrow">2025 — 2026</span>
-            <h3>Head of Exco Special Task</h3>
-            <p>
-              Computer Science Club · Leading special-task initiatives, team
-              coordination and student-focused event delivery.
-            </p>
-          </article>
-          <article>
-            <span class="eyebrow">JUN — AUG 2024</span>
-            <h3>Account Trainee</h3>
-            <p>
-              Jitudata Management Services Sdn. Bhd. · Bank reconciliation,
-              invoices, payment records and documentation using AutoCount.
-            </p>
-          </article>
-          <article>
-            <span class="eyebrow">OCT 2024 — PRESENT</span>
-            <h3>Digital Tech Outreach Facilitator</h3>
-            <p>
-              DQ programme · Facilitating IQRAC DQ sessions and guiding students
-              in the use of Gemini, NotebookLM and Canva AI.
-            </p>
-          </article>
-        </div>
-        <details class="disclosure">
-          <summary>
-            More leadership, outreach &amp; activities
-            <span aria-hidden="true">+</span>
-          </summary>
-          <div class="timeline">
+        <section class="experience-group" aria-labelledby="professional-experience-title">
+          <h3 id="professional-experience-title" class="subsection-title">Professional experience</h3>
+          <div class="experience-list">
             <article>
-              <span class="eyebrow">2026</span>
-              <h3>Multimedia &amp; Publicity Bureau</h3>
+              <span class="eyebrow">JUN — AUG 2024</span>
+              <h4>Account Trainee</h4>
               <p>
-                PwC Career Accelerator Challenge · Supporting event media,
-                publicity and participant communications.
+                Jitudata Management Services Sdn. Bhd. · Assisted in managing a
+                full set of accounts for SMEs during a two-month training period.
+                Processed invoices, entered payment vouchers and receipts using
+                AutoCount accounting software, performed bank reconciliations, and
+                prepared customer quotations and documentation.
               </p>
-            </article>
-            <article>
-              <span class="eyebrow">2026</span>
-              <h3>Sports Event PIC</h3>
-              <p>
-                Computer Science Club · Person in charge for Temasya Olahraga
-                Tahunan FSKM, coordinating activities and event operations.
-              </p>
-            </article>
-            <article>
-              <span class="eyebrow">2025</span>
-              <h3>Vice Programme Manager</h3>
-              <p>
-                CS’s Virtual Week · Coordinated the webinar industry talk,
-                programme flow and collaboration across the organizing team.
-              </p>
-            </article>
-            <article>
-              <span class="eyebrow">2025</span>
-              <h3>Mobile Legends Manager</h3>
-              <p>
-                SUPRO 2025 athlete selection · Managed the Computer Science Club
-                team and supported player selection and coordination.
-              </p>
-            </article>
-            <article>
-              <span class="eyebrow">2024 — 2025</span>
-              <h3>Exco Special Task</h3>
-              <p>
-                Computer Science Club · Supported club programmes, operations
-                and cross-team tasks before progressing into the head role.
-              </p>
-            </article>
-            <article>
-              <span class="eyebrow">2024 — PRESENT</span>
-              <h3>Career Programme Organizer</h3>
-              <p>
-                YES! My Next Move · Organizing committee member for the career
-                exploration programme with TalentCorp and university partners.
-              </p>
-            </article>
-            <article>
-              <span class="eyebrow">2024 — PRESENT</span>
-              <h3>Career Ambassador Club</h3>
-              <p>
-                Exco Multimedia &amp; Publicity · Creating and coordinating
-                communications that connect students with career opportunities.
-              </p>
-            </article>
-            <article>
-              <span class="eyebrow">2024</span>
-              <h3>Dean’s Award Ceremony Bureau</h3>
-              <p>
-                Discipline &amp; Moral Bureau · Supported the College of
-                Computing, Informatics and Mathematics recognition ceremony.
-              </p>
-            </article>
-            <article>
-              <span class="eyebrow">2026</span>
-              <h3>Exco Multimedia</h3>
-              <p>MDIT X DD Datathon 2026: Global Challenge.</p>
             </article>
           </div>
-        </details>
+        </section>
+        <section class="experience-group" aria-labelledby="leadership-title">
+          <h3 id="leadership-title" class="subsection-title">Leadership &amp; outreach</h3>
+          <div class="experience-list">
+            <article>
+              <span class="eyebrow">2025 — 2026</span>
+              <h4>Head of Exco Special Task</h4>
+              <p>
+                Computer Science Club · Leading special-task initiatives, team
+                coordination and student-focused event delivery.
+              </p>
+            </article>
+            <article>
+              <span class="eyebrow">OCT 2024 — PRESENT</span>
+              <h4>Digital Tech Outreach Facilitator</h4>
+              <p>
+                DQ programme · Facilitating IQRAC DQ sessions and guiding students
+                in the use of Gemini, NotebookLM and Canva AI.
+              </p>
+            </article>
+          </div>
+          <details class="disclosure">
+            <summary>
+              More leadership, outreach &amp; activities
+              <span aria-hidden="true">+</span>
+            </summary>
+            <div class="timeline">
+              <article>
+                <span class="eyebrow">2026</span>
+                <h4>Multimedia &amp; Publicity Bureau</h4>
+                <p>
+                  PwC Career Accelerator Challenge · Supporting event media,
+                  publicity and participant communications.
+                </p>
+              </article>
+              <article>
+                <span class="eyebrow">2026</span>
+                <h4>Sports Event PIC</h4>
+                <p>
+                  Computer Science Club · Person in charge for Temasya Olahraga
+                  Tahunan FSKM, coordinating activities and event operations.
+                </p>
+              </article>
+              <article>
+                <span class="eyebrow">2025</span>
+                <h4>Vice Programme Manager</h4>
+                <p>
+                  CS’s Virtual Week · Coordinated the webinar industry talk,
+                  programme flow and collaboration across the organizing team.
+                </p>
+              </article>
+              <article>
+                <span class="eyebrow">2025</span>
+                <h4>Mobile Legends Manager</h4>
+                <p>
+                  SUPRO 2025 athlete selection · Managed the Computer Science Club
+                  team and supported player selection and coordination.
+                </p>
+              </article>
+              <article>
+                <span class="eyebrow">2024 — 2025</span>
+                <h4>Exco Special Task</h4>
+                <p>
+                  Computer Science Club · Supported club programmes, operations
+                  and cross-team tasks before progressing into the head role.
+                </p>
+              </article>
+              <article>
+                <span class="eyebrow">2024 — PRESENT</span>
+                <h4>Career Programme Organizer</h4>
+                <p>
+                  YES! My Next Move · Organizing committee member for the career
+                  exploration programme with TalentCorp and university partners.
+                </p>
+              </article>
+              <article>
+                <span class="eyebrow">2024 — PRESENT</span>
+                <h4>Career Ambassador Club</h4>
+                <p>
+                  Exco Multimedia &amp; Publicity · Creating and coordinating
+                  communications that connect students with career opportunities.
+                </p>
+              </article>
+              <article>
+                <span class="eyebrow">2024</span>
+                <h4>Dean’s Award Ceremony Bureau</h4>
+                <p>
+                  Discipline &amp; Moral Bureau · Supported the College of
+                  Computing, Informatics and Mathematics recognition ceremony.
+                </p>
+              </article>
+              <article>
+                <span class="eyebrow">2026</span>
+                <h4>Exco Multimedia</h4>
+                <p>MDIT X DD Datathon 2026: Global Challenge.</p>
+              </article>
+            </div>
+          </details>
+        </section>
       </section>
       <section id="skills" class="section" aria-labelledby="skills-title">
         <div class="section-heading">
@@ -394,7 +402,6 @@
               looking to develop these skills in a software engineering,
               full-stack, or AI / ML internship.
             </p>
-            <a class="text-link" href="resume.html">More in my résumé ↗</a>
           </div>
         </div>
       </section>
@@ -425,7 +432,7 @@
                 target="_blank"
                 rel="noopener noreferrer"
                 >LinkedIn ↗</a
-              ><a href="resume.html">Résumé ↗</a>
+              >
             </div>
           </div>
           <form id="contact-form">

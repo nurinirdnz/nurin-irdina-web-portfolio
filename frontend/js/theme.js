@@ -47,8 +47,5 @@
         apply(theme === "dark" ? "light" : "dark"),
       );
     }
-    document
-      .getElementById("print-resume")
-      ?.addEventListener("click", () => print());
   });
 })();
