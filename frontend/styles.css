@@ -699,10 +699,10 @@ details[open] > summary > span {
   color: var(--color-text-muted);
 }
 .education-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 180px 110px;
   align-items: center;
-  justify-content: space-between;
-  gap: 20px;
+  gap: 24px;
   padding: 24px 0;
 }
 .education-row h3 {
@@ -710,6 +710,12 @@ details[open] > summary > span {
 }
 .education-row p, .education-row strong {
   font-size: .875rem;
+}
+.education-row > p {
+  white-space: nowrap;
+}
+.education-row > strong {
+  text-align: right;
 }
 .subsection {
   margin-top: 32px;
@@ -1042,10 +1048,17 @@ dialog .project-actions {
     padding-left: 20px;
   }
   .education-row {
-    flex-wrap: wrap;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px 20px;
   }
   .education-row > div {
-    flex-basis: 100%;
+    grid-column: 1 / -1;
+  }
+  .education-row > p {
+    grid-column: 1;
+  }
+  .education-row > strong {
+    grid-column: 2;
   }
 }
 @media (max-width: 600px) {

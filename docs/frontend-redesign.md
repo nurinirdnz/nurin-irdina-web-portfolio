@@ -24,8 +24,7 @@ the database seed remain unchanged.
 - **Remove:** repeated slogans, hover-only technology lists, decorative reveal
   gates, redundant hero statistics, unused selectors, and a misleading dialog
   note about illustrative screenshots (the visuals are architecture diagrams).
-- **Merge:** repeat academic statistics into the existing education presentation.
-- **Move:** About after skills and education; secondary architecture diagrams
+- **Move:** the full academic record to the dedicated résumé page; secondary architecture diagrams
   into their technical-detail dialogs.
 - **Shorten:** About and section titles. Keep complete implementation details
   available through progressive disclosure.
@@ -47,13 +46,11 @@ After:
 3. **Experience:** three visible roles; full additional leadership disclosure.
 4. **Capabilities:** six readable technology groups with project evidence links;
    supporting tools remain available in a disclosure.
-5. **Education:** degree, CGPA, Dean’s Awards, earlier education, qualifications
-   and competitions.
-6. **About:** brief development interests and work beyond software.
-7. **Contact:** direct contact links and the existing validated inbox form.
+5. **About:** brief development interests and work beyond software.
+6. **Contact:** direct contact links and the existing validated inbox form.
 
-Main navigation now has Projects, Experience, Skills and Contact. Education is
-linked from the opening profile, and the résumé remains directly accessible.
+Main navigation now has Projects, Experience, Skills and Contact. The full
+academic record remains on the résumé and is linked from the opening profile.
 
 JomDekan has the strongest documented breadth: React/TypeScript, Express,
 PostgreSQL, resource-grounded AI, citations, authentication, security, testing,
