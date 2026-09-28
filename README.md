@@ -1,3 +1,5 @@
+![visitors](https://komarev.com/ghpvc/?username=nurinirdnz-portfolio&label=visitors&color=blueviolet&style=flat)
+
 # Nurin Irdina — Full-Stack Portfolio
 
 [![CI](https://github.com/nurinirdnz/nurin-irdina-web-portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/nurinirdnz/nurin-irdina-web-portfolio/actions/workflows/ci.yml)
@@ -98,17 +100,17 @@ This application must run through its Node.js server. Opening `index.html` direc
 
 The application uses the following environment variables:
 
-| Variable         | Purpose                                                  |
-| ---------------- | --------------------------------------------------------- |
-| `PORT`           | Server port; defaults to `3000`                          |
-| `APP_ORIGIN`     | Exact public application origin without a trailing slash |
-| `ADMIN_PASSWORD` | Private admin password with at least 16 characters       |
-| `DATABASE_PATH`  | Path to the SQLite database                              |
-| `NODE_ENV`       | Use `development` locally and `production` when deployed |
-| `TRUST_PROXY`    | Number of trusted reverse proxies; normally `0` locally  |
-| `NOTIFY_EMAIL`   | Optional — email address that receives new contact-form messages |
+| Variable             | Purpose                                                                           |
+| -------------------- | --------------------------------------------------------------------------------- |
+| `PORT`               | Server port; defaults to `3000`                                                   |
+| `APP_ORIGIN`         | Exact public application origin without a trailing slash                          |
+| `ADMIN_PASSWORD`     | Private admin password with at least 16 characters                                |
+| `DATABASE_PATH`      | Path to the SQLite database                                                       |
+| `NODE_ENV`           | Use `development` locally and `production` when deployed                          |
+| `TRUST_PROXY`        | Number of trusted reverse proxies; normally `0` locally                           |
+| `NOTIFY_EMAIL`       | Optional — email address that receives new contact-form messages                  |
 | `BREVO_SENDER_EMAIL` | Optional — the "from" address, verified as a sender in [Brevo](https://brevo.com) |
-| `BREVO_API_KEY`  | Optional — Brevo API key (Settings → SMTP & API → API Keys)       |
+| `BREVO_API_KEY`      | Optional — Brevo API key (Settings → SMTP & API → API Keys)                       |
 
 Leave the three notification variables blank to disable email notifications entirely —
 messages still save to the database and remain visible in `/admin` either way.
@@ -209,7 +211,7 @@ Messages are stored in the database and are not automatically emailed.
 The application provides the following main endpoints:
 
 | Method  | Endpoint                  | Purpose                               |
-| ------- | -------------------------- | --------------------------------------- |
+| ------- | ------------------------- | ------------------------------------- |
 | `GET`   | `/api/health`             | Check application and database health |
 | `GET`   | `/api/portfolio`          | Retrieve portfolio project data       |
 | `POST`  | `/api/contact`            | Submit a contact message              |
