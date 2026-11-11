@@ -39,13 +39,34 @@
     } catch {}
     if (!hasStored) apply(e.matches ? "dark" : "light");
   });
+  // A single crossfade avoids elements recolouring at different speeds (or flashing).
+  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  let fadeTimer;
+  function toggle() {
+    const next = theme === "dark" ? "light" : "dark";
+    if (reducedMotion.matches) return apply(next);
+    if (document.startViewTransition) {
+      root.classList.add("theme-switching");
+      try {
+        document.startViewTransition(() => apply(next)).finished
+          .finally(() => root.classList.remove("theme-switching"));
+      } catch {
+        root.classList.remove("theme-switching");
+        apply(next);
+      }
+      return;
+    }
+    // Fallback: every surface eases its colours together for one short window.
+    root.classList.add("theme-fading");
+    apply(next);
+    clearTimeout(fadeTimer);
+    fadeTimer = setTimeout(() => root.classList.remove("theme-fading"), 320);
+  }
   document.addEventListener("DOMContentLoaded", () => {
     const button = document.getElementById("theme-toggle");
     if (button) {
       sync(button);
-      button.addEventListener("click", () =>
-        apply(theme === "dark" ? "light" : "dark"),
-      );
+      button.addEventListener("click", toggle);
     }
   });
 })();

@@ -4,19 +4,24 @@
   if (!("IntersectionObserver" in window)) return;
 
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  // Hero has its own CSS entrance; dialog content arrives with the dialog itself.
   const selectors = [
-    ".hero-copy > *", ".profile-summary", ".section-heading",
+    ".section-heading",
     ".rolling-card-header", ".rolling-card .project-info > *",
     ".rolling-card .project-visual", ".rolling-footer", ".archive-heading",
     ".archive-item", ".experience-group > .subsection-title", ".experience-list > article", ".timeline > article",
     ".skill-card", "details > summary", ".detail-columns > div",
     ".about-grid > div", ".contact-grid > div", ".contact form > *",
-    ".footer > *", "#dialog-content > *",
+    ".footer > *",
     ".admin-shell > .eyebrow", ".admin-shell > h1", "#login-form > *",
     ".toolbar", ".message",
   ].join(",");
+  const DURATION = 520;
+  const STAGGER = 70;
+  const MAX_DELAY = 280;
   const known = new WeakSet();
   const pending = new Map();
+  let initialScan = true;
 
   function finish(element) {
     const state = pending.get(element);
@@ -28,8 +33,14 @@
   }
 
   const observer = new IntersectionObserver(entries => {
+    // Stagger only what enters together, so a lone element never waits on its siblings.
+    let batch = 0;
     for (const entry of entries) {
-      if (!entry.isIntersecting || entry.intersectionRatio < 0.12) continue;
+      if (!entry.isIntersecting) continue;
+      // Tall elements may never reach 12% visibility; a quarter-screen of them is enough.
+      const visibleEnough = entry.intersectionRatio >= 0.12
+        || entry.intersectionRect.height >= innerHeight * 0.25;
+      if (!visibleEnough) continue;
       const element = entry.target;
       const state = pending.get(element);
       if (!state) continue;
@@ -38,28 +49,40 @@
         finish(element);
         continue;
       }
+      const delay = Math.min(batch++ * STAGGER, MAX_DELAY);
+      element.style.setProperty("--reveal-delay", `${delay}ms`);
       element.classList.add("is-revealed");
       // Remove reveal styling afterwards so existing hover transitions take over.
-      state.timer = setTimeout(() => finish(element), 500 + state.delay + 60);
+      state.timer = setTimeout(() => finish(element), DURATION + delay + 60);
     }
-  }, { threshold: 0.12 });
+  // No negative rootMargin: content at the very bottom of the page must still be able to trigger.
+  }, { threshold: [0, 0.12, 0.25] });
+
+  const inViewport = element => {
+    const rect = element.getBoundingClientRect();
+    return rect.bottom > 0 && rect.top < innerHeight;
+  };
 
   function register(element) {
-    if (document.documentElement.classList.contains("portfolio-loading") || element.closest("[data-skeleton]")) return;
+    if (element.closest("[data-skeleton]")) return;
+    // API-fed project content is registered once loading.js signals it is ready.
+    if (document.documentElement.classList.contains("portfolio-loading") && element.closest("#work")) return;
     if (known.has(element)) return;
     known.add(element);
+    // Back cards in the project stack are clipped, so they never "enter" the viewport;
+    // their own rotation transition is their entrance.
+    const card = element.closest(".rolling-card");
+    if (card && card.dataset.position !== "0") return;
+    // Closed <details> content is never reported as intersecting; the disclosure's
+    // own open animation covers it instead.
+    if (element.closest("details > :not(summary)")) return;
     if (reducedMotion.matches || element.matches('[role="status"], [role="alert"], .form-note')) return;
     // Avoid nested reveals and leave anything already being used fully visible.
     if (element.parentElement?.closest(".scroll-reveal") || element.contains(document.activeElement)) return;
-    // The loading fade handles the current viewport; offscreen content keeps its scroll reveal.
-    if (document.querySelector(".portfolio-entering")) {
-      const rect = element.getBoundingClientRect();
-      if (rect.bottom > 0 && rect.top < innerHeight) return;
-    }
-    const index = [...element.parentElement.children].indexOf(element);
-    const delay = Math.min(Math.max(index, 0) * 70, 480);
-    pending.set(element, { delay, timer: null });
-    element.style.setProperty("--reveal-delay", `${delay}ms`);
+    // Never hide something the visitor may already have seen painted (first load, or the
+    // project area's own fade-in); only content still below the fold gets a reveal.
+    if ((initialScan || element.closest(".portfolio-entering")) && inViewport(element)) return;
+    pending.set(element, { timer: null });
     element.classList.add("scroll-reveal");
     observer.observe(element);
   }
@@ -70,9 +93,10 @@
   }
 
   scan(document);
+  initialScan = false;
   document.addEventListener("portfolio:ready", () => scan(document), { once: true });
   new MutationObserver(records => {
-    // API-fed projects, filtered cards, dialog content and inbox messages.
+    // API-fed projects, filtered cards and inbox messages.
     for (const element of pending.keys()) {
       if (!element.isConnected) finish(element);
     }

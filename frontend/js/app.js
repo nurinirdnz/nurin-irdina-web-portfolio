@@ -15,6 +15,15 @@
     );
   const $ = (s) => document.querySelector(s);
   $("#year").textContent = new Date().getFullYear();
+  // Alternating class names restart the CSS settle-in animation for every new message.
+  let noteFlip = false;
+  const setStatus = (text) => {
+    const note = $("#form-status");
+    note.textContent = text;
+    noteFlip = !noteFlip;
+    note.classList.toggle("note-a", noteFlip);
+    note.classList.toggle("note-b", !noteFlip);
+  };
   $("#contact-form").addEventListener("submit", async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -24,14 +33,13 @@
     const from = String(data.get("email")).trim();
     const message = String(data.get("message")).trim();
     if (!name || message.length < 10) {
-      $("#form-status").textContent =
-        "Please add your name and a message of at least 10 characters.";
+      setStatus("Please add your name and a message of at least 10 characters.");
       return;
     }
     const submit = form.querySelector('button[type="submit"]');
     submit.disabled = true;
     submit.firstElementChild.textContent = "Sending…";
-    $("#form-status").textContent = "Sending your message…";
+    setStatus("Sending your message…");
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
@@ -41,11 +49,10 @@
       const result = await response.json();
       if (!response.ok)
         throw new Error(result.error || "Unable to send. Please try again.");
-      $("#form-status").textContent = result.message;
+      setStatus(result.message);
       form.reset();
     } catch (error) {
-      $("#form-status").textContent =
-        error.message || "Connection failed. Please try again.";
+      setStatus(error.message || "Connection failed. Please try again.");
     } finally {
       submit.disabled = false;
       submit.firstElementChild.textContent = "Send message";
