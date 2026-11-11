@@ -4,7 +4,7 @@
 
 [![CI](https://github.com/nurinirdnz/nurin-irdina-web-portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/nurinirdnz/nurin-irdina-web-portfolio/actions/workflows/ci.yml)
 
-**Live:** [nurin-irdina-portfolio.onrender.com](https://nurin-irdina-portfolio.onrender.com)
+**Live:** [nurin-irdina.vercel.app](https://nurin-irdina.vercel.app/)
 
 A full-stack personal portfolio showcasing my software projects, technical skills, education, leadership experience, and professional journey.
 
@@ -289,7 +289,7 @@ The SQLite database is stored in a named Docker volume and survives ordinary con
 
 ## Deployment
 
-### Render (current live host)
+### Render (alternative: Docker with admin inbox)
 
 This repo includes `render.yaml`, a Blueprint that deploys the Docker image directly:
 
@@ -302,7 +302,7 @@ Render's free tier has no persistent disk, so `backend/data/portfolio.sqlite` re
 each redeploy — contact-form messages won't survive a redeploy on the free plan. Upgrading
 to a paid instance type with an attached disk removes this limitation.
 
-### Vercel (email-only mode)
+### Vercel (current live host, email-only mode)
 
 `vercel.json` and `api/index.mjs` deploy the same Express app as a serverless function,
 with the static frontend served from Vercel's CDN. Vercel has no persistent disk, so this
