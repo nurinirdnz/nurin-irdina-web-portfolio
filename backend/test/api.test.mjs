@@ -13,7 +13,7 @@ const message={name:'Example Visitor',email:'visitor@example.com',message:'I wou
 
 test('public portfolio is served from SQLite and static assets load',async t=>{
  const {app,db}=fixture(t),client=request(app);
- const result=await client.get('/api/portfolio').expect(200);assert.equal(result.body.projects.length,7);
+ const result=await client.get('/api/portfolio').expect(200);assert.equal(result.body.projects.length,11);
  db.prepare("UPDATE settings SET value=? WHERE key='email'").run('updated@example.com');
  assert.equal((await client.get('/api/portfolio')).body.email,'updated@example.com');
  await client.get('/').expect(200).expect('Content-Type',/html/);
@@ -70,5 +70,5 @@ test('expired sessions are rejected and production cookies are secure',async t=>
 });
 test('SQLite retains submissions across restart without duplicating seed projects',()=>{
  const dir=mkdtempSync(join(tmpdir(),'portfolio-test-')),file=join(dir,'test.sqlite');
- try{let db=openDatabase(file);db.prepare('INSERT INTO messages(id,name,email,message) VALUES(?,?,?,?)').run('test-id',message.name,message.email,message.message);db.close();db=openDatabase(file);assert.equal(db.prepare('SELECT COUNT(*) n FROM messages').get().n,1);assert.equal(db.prepare('SELECT COUNT(*) n FROM projects').get().n,7);db.close();}finally{rmSync(dir,{recursive:true,force:true});}
+ try{let db=openDatabase(file);db.prepare('INSERT INTO messages(id,name,email,message) VALUES(?,?,?,?)').run('test-id',message.name,message.email,message.message);db.close();db=openDatabase(file);assert.equal(db.prepare('SELECT COUNT(*) n FROM messages').get().n,1);assert.equal(db.prepare('SELECT COUNT(*) n FROM projects').get().n,11);db.close();}finally{rmSync(dir,{recursive:true,force:true});}
 });

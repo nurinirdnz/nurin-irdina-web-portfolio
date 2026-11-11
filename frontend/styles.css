@@ -477,7 +477,7 @@ main > section + section {
 .rolling-stage {
   display: grid;
   position: relative;
-  padding-top: 112px;
+  padding-top: 168px; /* room for three stacked cards behind the active one */
   touch-action: pan-y;
 }
 .project-card {
@@ -566,6 +566,15 @@ main > section + section {
 }
 .rolling-card h3 {
   font-size: var(--text-project);
+}
+.project-context {
+  margin-top: 6px;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: 550;
+}
+dialog .project-context {
+  margin-bottom: 12px;
 }
 .project-description {
   margin-top: 12px;
@@ -1355,7 +1364,7 @@ dialog .project-actions {
     max-width: 60ch;
   }
   .rolling-stage {
-    padding-top: 112px;
+    padding-top: 168px;
   }
   .rolling-card-body {
     grid-template-columns: minmax(0, 1fr);
@@ -1483,7 +1492,7 @@ dialog .project-actions {
     margin-top: 4px;
   }
   .rolling-stage {
-    padding-top: 88px;
+    padding-top: 126px;
   }
   .rolling-card {
     grid-template-rows: 48px auto;

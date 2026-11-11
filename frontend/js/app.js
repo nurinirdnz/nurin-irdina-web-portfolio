@@ -74,6 +74,7 @@
     );
     projects.forEach((p) => {
       if (p.url && !p.url.startsWith("https://")) delete p.url;
+      if (p.demo && !p.demo.startsWith("https://")) delete p.demo;
     });
   } catch {
     projects = [];
@@ -85,6 +86,26 @@
   const diagram = (caption, ...nodes) =>
     `<div class="architecture">${nodes.map((n, i) => (i ? '<div class="arch-connector"></div>' : "") + n).join("")}</div><p class="arch-caption">${caption}</p>`;
   const previews = {
+    simetown: diagram(
+      "Simplified architecture overview.",
+      node(1, "Next.js + React", "Role-based screens"),
+      node(2, "Typed router", "Auth, roles, zod &amp; rate limits"),
+      node(3, "Feature modules", "Routes &amp; service rules"),
+      node(4, "PostgreSQL", "Double-entry points ledger"),
+    ),
+    jombeli: diagram(
+      "Simplified checkout flow.",
+      node(1, "React + Zustand", "Products, cart &amp; orders"),
+      node(2, "Express API", "JWT auth &amp; price checks"),
+      node(3, "Redis", "Cached product lookups"),
+      node(4, "PostgreSQL", "Orders in one transaction"),
+    ),
+    fyp: diagram(
+      "Planned pipeline. Project in progress.",
+      node(1, "Satellite hotspots", "Himawari-8/9 &amp; NASA FIRMS"),
+      node(2, "ML models", "Hotspot class &amp; next-day haze"),
+      node(3, "Risk ranking", "Prioritised hotspot dashboard"),
+    ),
     jomdekan: diagram(
       "Simplified architecture overview.",
       node(1, "React + TypeScript", "Client interface"),
@@ -106,10 +127,16 @@
     ),
   };
   // Select highlights from API data; full capabilities remain in each dialog.
-  const highlightIndexes = { jomdekan: [2, 3, 7], fitwus: [0, 2, 4], animals: [0, 1, 3] };
-  const sourceLink = (p) => p.url
-    ? `<a class="text-link" href="${p.url}" target="_blank" rel="noopener noreferrer" aria-label="${p.name} source on GitHub">GitHub <span aria-hidden="true">↗</span></a>`
-    : "";
+  const highlightIndexes = {
+    simetown: [0, 1, 6], jomdekan: [2, 3, 7], jombeli: [0, 1, 2], fyp: [0, 1, 2],
+    fitwus: [0, 2, 4], animals: [0, 1, 3],
+  };
+  const pad = (n) => String(n).padStart(2, "0");
+  const sourceLink = (p) => [
+    p.url ? `<a class="text-link" href="${p.url}" target="_blank" rel="noopener noreferrer" aria-label="${p.name} source on GitHub">GitHub <span aria-hidden="true">↗</span></a>` : "",
+    p.demo ? `<a class="text-link" href="${p.demo}" target="_blank" rel="noopener noreferrer" aria-label="${p.name} live demo">Live demo <span aria-hidden="true">↗</span></a>` : "",
+  ].join("");
+  const contextLine = (p) => p.context ? `<p class="project-context">${p.context}</p>` : "";
   const stackTags = (p) => p.stack.map(technology => `<span class="tech-tag">${technology}</span>`).join("");
   const featuredProjects = projects.filter((p) => p.featured);
   const featuredGrid = $("#featured-grid");
@@ -122,11 +149,12 @@
                 `<article id="project-${p.id}" class="project-card rolling-card" data-stack-card data-slide-index="${i}" data-position="${i}" aria-labelledby="title-${p.id}"${i ? ' aria-hidden="true"' : ""}>
                   <header class="rolling-card-header">
                     <span class="rolling-card-caption">${p.category}</span>
-                    <span class="index" aria-hidden="true">0${i + 1}</span>
+                    <span class="index" aria-hidden="true">${pad(i + 1)}</span>
                   </header>
                   <div class="rolling-card-body">
                     <div class="project-info">
                       <h3 id="title-${p.id}">${p.name}</h3>
+                      ${contextLine(p)}
                       <p class="project-description">${p.description}</p>
                       <p class="project-stack"><span class="sr-only">Technologies: </span>${stackTags(p)}</p>
                       <ul class="project-features">${(highlightIndexes[p.id] || [0, 1, 2]).map(index => p.features[index]).filter(Boolean).map(f => `<li>${f}</li>`).join("")}</ul>
@@ -142,7 +170,7 @@
           <div class="rolling-pagination" role="group" aria-label="Choose a featured project">
             ${featuredProjects.map((p, i) => `<button type="button" class="rolling-dot${i === 0 ? " active" : ""}" data-slide="${i}" aria-label="Show ${p.name}" aria-pressed="${i === 0}"><span></span></button>`).join("")}
           </div>
-          <p class="rolling-status" aria-live="polite"><span>01</span> / 0${featuredProjects.length} · ${featuredProjects[0].name}</p>
+          <p class="rolling-status" aria-live="polite"><span>01</span> / ${pad(featuredProjects.length)} · ${featuredProjects[0].name}</p>
           <div class="rolling-navigation" aria-label="Featured project navigation">
             <button type="button" class="rolling-control" data-direction="previous" aria-label="Previous featured project"><span aria-hidden="true">←</span></button>
             <button type="button" class="rolling-control" data-direction="next" aria-label="Next featured project"><span aria-hidden="true">→</span></button>
@@ -179,7 +207,7 @@
         dot.classList.toggle("active", active);
         dot.setAttribute("aria-pressed", String(active));
       });
-      status.innerHTML = `<span>0${activeIndex + 1}</span> / 0${cards.length} · ${featuredProjects[activeIndex].name}`;
+      status.innerHTML = `<span>${pad(activeIndex + 1)}</span> / ${pad(cards.length)} · ${featuredProjects[activeIndex].name}`;
       if (focusWasInsideCard) cards[activeIndex].querySelector("button, a")?.focus({ preventScroll: true });
     }
 
@@ -240,7 +268,7 @@
       .filter((p) => !p.featured && (filter === "all" || p.type === filter))
       .map(
         (p) =>
-          `<article class="archive-item"><span class="index">0${projects.indexOf(p) + 1}</span><div><h4>${p.name}</h4><p>${p.description}</p><p class="archive-stack">${p.stack.join(" · ")}</p></div><button class="text-link" data-project="${p.id}" aria-label="View ${p.name} project details">Details <span aria-hidden="true">↗</span></button></article>`,
+          `<article class="archive-item"><span class="index">${pad(projects.indexOf(p) + 1)}</span><div><h4>${p.name}</h4><p>${p.description}</p><p class="archive-stack">${p.stack.join(" · ")}</p></div><button class="text-link" data-project="${p.id}" aria-label="View ${p.name} project details">Details <span aria-hidden="true">↗</span></button></article>`,
       )
       .join("");
   }
@@ -263,7 +291,7 @@
     if (!p) return;
     opener = card;
     $("#dialog-content").innerHTML =
-      `<p class="eyebrow">${p.category}</p><h2 id="dialog-title">${p.name}</h2><p>${p.description}</p><p class="project-stack">${stackTags(p)}</p><section class="case-section"><h3>Implementation</h3><p>${p.detail}</p></section><section class="case-section"><h3>Engineering features</h3><ul>${p.features.map((f) => `<li>${f}</li>`).join("")}</ul></section>${previews[p.id] ? `<section class="case-section"><h3>System overview</h3><div class="project-visual">${previews[p.id]}</div></section>` : ""}<section class="case-section"><h3>Technology &amp; architecture</h3><p>${p.tools}</p></section><section class="case-section"><h3>Skills demonstrated</h3><p>${p.skills}</p></section><div class="project-actions">${sourceLink(p)}</div>`;
+      `<p class="eyebrow">${p.category}</p><h2 id="dialog-title">${p.name}</h2>${contextLine(p)}<p>${p.description}</p><p class="project-stack">${stackTags(p)}</p><section class="case-section"><h3>Implementation</h3><p>${p.detail}</p></section><section class="case-section"><h3>Engineering features</h3><ul>${p.features.map((f) => `<li>${f}</li>`).join("")}</ul></section>${previews[p.id] ? `<section class="case-section"><h3>System overview</h3><div class="project-visual">${previews[p.id]}</div></section>` : ""}<section class="case-section"><h3>Technology &amp; architecture</h3><p>${p.tools}</p></section><section class="case-section"><h3>Skills demonstrated</h3><p>${p.skills}</p></section><div class="project-actions">${sourceLink(p)}</div>`;
     document.body.classList.add("modal-open", "dialog-open");
     dialog.showModal();
     dialog.scrollTop = 0;

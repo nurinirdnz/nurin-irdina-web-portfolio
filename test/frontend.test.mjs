@@ -103,18 +103,22 @@ function fixture(fetchPortfolio = async () => ({ ok: true, json: async () => see
 test("featured work exposes API descriptions, stacks, and features with only supplied source URLs", async () => {
   const f = fixture(); await f.completion;
   const html = f.nodes["#featured-grid"].innerHTML;
-  assert.equal((html.match(/class="project-card/g) || []).length, 3);
-  assert.equal((html.match(/data-stack-card/g) || []).length, 3);
-  assert.equal((html.match(/data-slide="/g) || []).length, 3);
+  assert.equal((html.match(/class="project-card/g) || []).length, 4);
+  assert.equal((html.match(/data-stack-card/g) || []).length, 4);
+  assert.equal((html.match(/data-slide="/g) || []).length, 4);
   assert.match(html, /aria-roledescription="carousel"/);
   assert.match(html, /data-direction="previous"/);
   assert.match(html, /data-direction="next"/);
   assert.match(html, /resource-grounded assistant with citations/i);
-  assert.match(html.replace(/<[^>]+>/g, " "), /TensorFlow\s+Keras/);
+  assert.match(html, /double-entry points ledger/i);
+  assert.match(html.replace(/<[^>]+>/g, " "), /Next\.js\s+React/);
+  assert.match(html, /class="project-context">Team leader/);
   assert.match(html, /href="https:\/\/github.com\/nurinirdnz\/Jom-Dekan"/);
-  assert.equal((html.match(/href=/g) || []).length, 1);
+  assert.match(html, /href="https:\/\/simetown.onrender.com\/"[^>]*>Live demo/);
+  // Four GitHub repositories plus one live demo; projects without URLs get no links.
+  assert.equal((html.match(/href=/g) || []).length, 5);
   assert.doesNotMatch(html, /<button[^>]*>(?:(?!<\/button>)[\s\S])*<a\b/);
-  assert.equal(f.nodes["#archive-count"].textContent, "/ 4");
+  assert.equal(f.nodes["#archive-count"].textContent, "/ 7");
 });
 
 test("rolling project controls, keyboard navigation, and swipe update the active card", async () => {
@@ -123,14 +127,15 @@ test("rolling project controls, keyboard navigation, and swipe update the active
   await f.nodes["#featured-grid"].emit("click", {
     target: { closest: selector => selector === "[data-direction]" ? next : null },
   });
-  assert.match(f.rolling.status.innerHTML, /FitWUs/);
+  assert.match(f.rolling.status.innerHTML, /JomDekan/);
   assert.equal(f.rolling.cards[1].attrs["aria-hidden"], "false");
   assert.equal(f.rolling.cards[0].controls[0].attrs.tabindex, "-1");
   await f.rolling.root.emit("keydown", { key: "ArrowRight" });
-  assert.match(f.rolling.status.innerHTML, /Animal Image Classification/);
+  assert.match(f.rolling.status.innerHTML, /JomBeli/);
   await f.rolling.root.emit("pointerdown", { clientX: 120, target: { closest: () => null } });
   await f.rolling.root.emit("pointerup", { clientX: 20 });
-  assert.match(f.rolling.status.innerHTML, /JomDekan/);
+  assert.match(f.rolling.status.innerHTML, /Fire Hotspot/);
+  assert.match(f.rolling.status.innerHTML, /<span>04<\/span> \/ 04/);
 });
 
 test("archive filters retain details and dialog returns focus to the activating control", async () => {
@@ -156,13 +161,13 @@ test("archive filters retain details and dialog returns focus to the activating 
 test("skill evidence links reveal and focus the referenced featured project", async () => {
   const f = fixture(); await f.completion;
   const link = element();
-  link.setAttribute("href", "#project-animals");
+  link.setAttribute("href", "#project-jombeli");
   await f.document.emit("click", {
     target: { closest: selector => selector === 'a[href^="#project-"]' ? link : null },
   });
   assert.equal(f.rolling.cards[2].attrs["aria-hidden"], "false");
   assert.equal(f.rolling.cards[2].focused, true);
-  assert.match(f.rolling.status.innerHTML, /Animal Image Classification/);
+  assert.match(f.rolling.status.innerHTML, /JomBeli/);
 });
 
 test("arrow navigation keeps keyboard focus in the visible project", async () => {
@@ -181,6 +186,7 @@ test("API text is escaped, unsafe URLs omitted, and new featured projects need n
   const data = structuredClone(seed);
   data.projects[0].name = '<img src=x onerror="alert(1)">';
   data.projects[0].url = "javascript:alert(1)";
+  data.projects[0].demo = "javascript:alert(2)";
   data.projects.push({ ...data.projects[1], id: "new-project", name: "New project" });
   const f = fixture(async () => ({ ok: true, json: async () => data })); await f.completion;
   const html = f.nodes["#featured-grid"].innerHTML;

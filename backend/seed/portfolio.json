@@ -2,6 +2,39 @@
   "email": "nurinirdnz@gmail.com",
   "projects": [
     {
+      "id": "simetown",
+      "name": "SimeTown",
+      "subtitle": "One township, one sign-in.",
+      "category": "Full-stack · Hackathon · Team lead",
+      "context": "Team leader · Sime Darby Property University Hackathon 2026",
+      "type": "fullstack",
+      "featured": true,
+      "stack": [
+        "Next.js",
+        "React",
+        "TypeScript",
+        "PostgreSQL",
+        "Tailwind CSS",
+        "Vitest",
+        "Docker"
+      ],
+      "description": "A multi-role township super-app prototype that connects residents, shops, guards, couriers and township staff through one sign-in and one audited rewards ledger. Built by a five-person student team.",
+      "detail": "A Next.js 16 and React 19 application with an isolated TypeScript backend. A typed route table declares each endpoint’s auth mode, roles, zod schemas and rate limits, and plain parameterised SQL migrations run on PostgreSQL. As team leader I started the codebase and its architecture, built major features end to end, merged teammates’ branches and pull requests, and owned security, DevOps and quality; the project’s contributions record credits me with 34 of the team’s 67 non-merge commits. This is an independent student prototype, not an official Sime Darby Property product, and its demo data and integrations are simulated.",
+      "features": [
+        "Double-entry points ledger with balance, zero-sum and immutability guards enforced inside PostgreSQL",
+        "Typed router enforcing auth, roles, zod validation and rate limits for every endpoint",
+        "Smart parcel lockers with one-time pickup codes and courier sign-in via OpenID Connect (PKCE)",
+        "AI assistant with tool calling that only takes actions after the resident confirms",
+        "Role-based session timeouts, per-request CSP nonces and AES-256-GCM encryption of visitor ID numbers",
+        "Simple Mode, an accessible view, read-aloud and full English / Bahasa Malaysia",
+        "Vitest suites on in-process PGlite and PostgreSQL 16 in CI, with Docker images published to GHCR"
+      ],
+      "tools": "Next.js 16 · React 19 · TypeScript · PostgreSQL · PGlite · Tailwind CSS 4 · zod · Upstash Redis · OpenID Connect · Anthropic / OpenAI APIs · nodemailer · sharp · Vitest · Docker · GitHub Actions · GHCR · Render · Supabase",
+      "skills": "Team leadership, system architecture, full-stack development, database design, web security, AI integration, accessibility, internationalisation, automated testing and CI/CD.",
+      "url": "https://github.com/nurinirdnz/SimeTown",
+      "demo": "https://simetown.onrender.com/"
+    },
+    {
       "id": "jomdekan",
       "name": "JomDekan",
       "subtitle": "A better place to learn. Together.",
@@ -34,12 +67,72 @@
       "url": "https://github.com/nurinirdnz/Jom-Dekan"
     },
     {
+      "id": "jombeli",
+      "name": "JomBeli",
+      "subtitle": "Jom shop, jom jimat!",
+      "category": "Full-stack · E-commerce",
+      "context": "Built during the KADA AI-Enabled Full Stack Bootcamp",
+      "type": "fullstack",
+      "featured": true,
+      "stack": [
+        "React",
+        "Zustand",
+        "Tailwind CSS",
+        "Express",
+        "PostgreSQL",
+        "Redis",
+        "JWT"
+      ],
+      "description": "A full-stack online shopping app with product search and filters, a cart, JWT accounts, server-verified checkout and order history.",
+      "detail": "A React 19 and Vite frontend with Zustand stores calls a Node.js and Express 5 API. At checkout the browser sends only product ids and quantities: the server looks up real prices and stock, calculates the totals itself, and writes the order and its items in a single PostgreSQL transaction with a price snapshot per item, so order history stays correct when products change. Product lookups are cached in Redis for 10 minutes, and the API keeps working if Redis is unavailable.",
+      "features": [
+        "Server-side price and stock verification, so a tampered request cannot change what is charged",
+        "Orders and items saved in one PostgreSQL transaction with price snapshots",
+        "Redis caching of product lookups with graceful fallback",
+        "bcrypt-hashed passwords, JWT authentication and protected order routes",
+        "Helmet headers, restricted CORS and rate-limited login and registration",
+        "Search, category and stock filters, sorting and paginated product list",
+        "Slide-in cart with stock-based quantity limits"
+      ],
+      "tools": "React 19 · React Router 7 · Zustand · Axios · Tailwind CSS 4 · Vite · Node.js · Express 5 · PostgreSQL (pg) · Supabase · Redis · Upstash · bcryptjs · JSON Web Tokens · Helmet · express-rate-limit · Docker Compose · Cloudflare Pages · Render",
+      "skills": "Full-stack development, REST API design, transactional data modelling, caching, authentication and web security.",
+      "url": "https://github.com/nurinirdnz/Jom-Beli"
+    },
+    {
+      "id": "fyp",
+      "name": "Fire Hotspot & Haze Risk",
+      "subtitle": "Which fires matter to Sarawak’s air.",
+      "category": "Final Year Project · Machine learning",
+      "context": "Final Year Project · In progress (requirements and planning stage)",
+      "type": "ai",
+      "featured": true,
+      "stack": [
+        "Python",
+        "pandas",
+        "scikit-learn",
+        "XGBoost",
+        "NASA FIRMS",
+        "Himawari-8/9"
+      ],
+      "description": "An in-progress final year project to classify satellite fire hotspots, predict next-day haze in Sarawak, and rank hotspots by transboundary haze risk so agencies and the public get earlier warning.",
+      "detail": "AI-Based Real-Time Classification and Prioritisation of Fire Hotspots for Transboundary Haze Risk in Sarawak. Satellites report every hotspot the same way, with no indication of which ones threaten Sarawak’s air. The project plans to combine Himawari-8/9 and NASA VIIRS hotspot detections with wind data and Department of Environment air-quality readings, and to compare candidate models such as random forest and XGBoost on held-out data from the August–September 2026 haze episode. Completed so far: the problem statement, requirements, user stories and a weighted tech-stack evaluation. The tools listed are planned and may change.",
+      "features": [
+        "Classify hotspots as persistent fires or short-lived detections",
+        "Predict whether next-day air quality (API) will exceed 100 at selected Sarawak stations",
+        "Rank hotspots by haze risk using class, fire strength, distance and wind direction",
+        "Dashboard with a hotspot map, next-day forecast and ranked hotspot list",
+        "Requirements, user stories and sprint log managed on GitHub"
+      ],
+      "tools": "Planned: Python · pandas · NumPy · scikit-learn · XGBoost · MLflow · FastAPI · PostgreSQL/PostGIS · NASA FIRMS (VIIRS 375 m) · Himawari-8/9 · ERA5 wind data · DOE APIMS air-quality data · Git · GitHub Actions · GitHub Projects",
+      "skills": "Problem framing, requirements engineering, data integration, machine-learning model evaluation and research methodology.",
+      "url": "https://github.com/nurinirdnz/Final-Year-Project"
+    },
+    {
       "id": "fitwus",
       "name": "FitWUs",
       "subtitle": "Small habits. A healthier everyday.",
       "category": "Full-stack · HealthTech · AI",
       "type": "fullstack",
-      "featured": true,
       "color": "purple",
       "stack": [
         "React",
@@ -67,7 +160,6 @@
       "subtitle": "Teaching machines to see.",
       "category": "Machine learning · Computer vision",
       "type": "ai",
-      "featured": true,
       "color": "blue",
       "stack": [
         "Python",
@@ -133,6 +225,31 @@
       ],
       "tools": "Java · JSP · Java Servlets · JavaBeans · MySQL · HTML · CSS · MVC",
       "skills": "Java web development, OOP, MVC architecture, database design, CRUD operations and session management."
+    },
+    {
+      "id": "csc640",
+      "name": "Git, Testing & CI/CD Lab",
+      "subtitle": "Ship only what passes.",
+      "category": "Python · Testing & CI/CD",
+      "type": "tooling",
+      "stack": [
+        "Python",
+        "pytest",
+        "GitHub Actions",
+        "GitHub Pages"
+      ],
+      "description": "A CSC640 course lab practising Git branching, pull requests, Python unit testing, GitHub Actions CI and GitHub Pages deployment.",
+      "detail": "A small Python study-planner module covered by pytest unit tests. A GitHub Actions workflow runs the tests on every push and pull request, and deploys the static site to GitHub Pages from main only after the tests pass. The repository also holds a weighted tech-stack evaluation for the final year project.",
+      "features": [
+        "pytest unit tests for deadline, urgency, sorting and completion helpers",
+        "Continuous integration on every push and pull request",
+        "Test-gated GitHub Pages deployment from main",
+        "Weighted decision matrix and decision record for a tech-stack choice"
+      ],
+      "tools": "Python 3.12 · pytest · GitHub Actions · GitHub Pages · Git",
+      "skills": "Version control, automated testing, continuous integration, deployment and technical decision records.",
+      "url": "https://github.com/nurinirdnz/CSC640-week4-lab",
+      "demo": "https://nurinirdnz.github.io/CSC640-week4-lab/"
     },
     {
       "id": "pickupla",
