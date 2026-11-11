@@ -302,6 +302,27 @@ Render's free tier has no persistent disk, so `backend/data/portfolio.sqlite` re
 each redeploy — contact-form messages won't survive a redeploy on the free plan. Upgrading
 to a paid instance type with an attached disk removes this limitation.
 
+### Vercel (email-only mode)
+
+`vercel.json` and `api/index.mjs` deploy the same Express app as a serverless function,
+with the static frontend served from Vercel's CDN. Vercel has no persistent disk, so this
+mode differs from Render/Docker:
+
+- Project data is loaded from `backend/seed/portfolio.json` into an in-memory SQLite database.
+- Contact messages are **emailed via Brevo, not stored**. The email is sent before the
+  visitor gets a reply; if sending fails, the visitor sees an error instead of a false success.
+- The admin inbox (`/admin`, `/api/admin/*`) is disabled.
+
+Setup:
+
+1. Vercel dashboard → **Add New** → **Project** → import this repository (no framework preset).
+2. Add environment variables: `NOTIFY_EMAIL`, `BREVO_SENDER_EMAIL`, `BREVO_API_KEY`
+   (see `.env.example`). `APP_ORIGIN` is optional — it defaults to the production
+   `*.vercel.app` URL; set it if you use a custom domain.
+3. Deploy. Vercel auto-redeploys on every push to `main`.
+
+Contact submissions only work on the production URL (preview URLs fail the same-origin check).
+
 ### Other hosts
 
 Deploy this project to any host that supports:

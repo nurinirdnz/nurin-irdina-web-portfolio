@@ -42,8 +42,11 @@ export function createApp({
   notifyEmail,
   brevoApiKey,
   brevoSenderEmail,
+  // inbox=false is "email-only" mode for hosts without a persistent disk (e.g. Vercel):
+  // messages are emailed instead of stored, and the admin inbox is not exposed.
+  inbox = true,
 }) {
-  if (!adminPassword || adminPassword.length < 16)
+  if (inbox && (!adminPassword || adminPassword.length < 16))
     throw new Error(
       "ADMIN_PASSWORD must contain at least 16 characters. Run npm run setup.",
     );
@@ -53,6 +56,8 @@ export function createApp({
   // A missing or failing send never blocks a contact submission — the database write is
   // the source of truth, and messages always remain visible in /admin regardless.
   const mailerEnabled = Boolean(notifyEmail && brevoApiKey && brevoSenderEmail);
+  // Email-only mode without email settings keeps the site up but refuses contact
+  // submissions, so no message is ever accepted and then silently lost.
   if (!mailerEnabled)
     console.log(
       "Email notifications disabled: set NOTIFY_EMAIL, BREVO_API_KEY and BREVO_SENDER_EMAIL to enable them.",
@@ -153,7 +158,7 @@ export function createApp({
         .map((row) => JSON.parse(row.content)),
     }),
   );
-  app.post("/api/contact", limit(5, 15), (req, res) => {
+  app.post("/api/contact", limit(5, 15), async (req, res) => {
     const parsed = contactSchema.safeParse(req.body);
     if (!parsed.success)
       return res
@@ -164,6 +169,26 @@ export function createApp({
         });
     const { name, email, message } = parsed.data,
       id = randomUUID();
+    if (!inbox && !mailerEnabled)
+      return res.status(503).json({
+        error: "The contact form is temporarily unavailable. Please reach me via LinkedIn or GitHub.",
+      });
+    if (!inbox) {
+      // No database copy exists in this mode, so the email must be sent before replying:
+      // serverless hosts may freeze the function once the response is sent.
+      try {
+        await sendNotification({ id, name, email, message });
+      } catch (error) {
+        console.error(`Contact email failed for message ${id}:`, error.message);
+        return res.status(502).json({
+          error: "Your message could not be sent right now. Please try again later, or reach me via LinkedIn or GitHub.",
+        });
+      }
+      return res.status(201).json({
+        id,
+        message: "Your message has been received. Thank you for reaching out.",
+      });
+    }
     db.prepare(
       "INSERT INTO messages (id,name,email,message) VALUES (?,?,?,?)",
     ).run(id, name, email, message);
@@ -182,6 +207,12 @@ export function createApp({
       );
     }
   });
+  if (!inbox) {
+    // Email-only mode: no admin routes or admin page at all.
+    app.use(["/api/admin", "/admin", "/admin.html"], (_req, res) =>
+      res.status(404).json({ error: "Not found." }),
+    );
+  }
   const cookieOptions = {
     httpOnly: true,
     sameSite: "strict",

@@ -1,0 +1,11 @@
+# Never upload private or local-only files to Vercel (matters for `vercel` CLI deploys).
+private/
+tmp/
+.env
+.env.*
+!.env.example
+backend/data/
+node_modules/
+.agents/
+.playwright-mcp/
+coverage/

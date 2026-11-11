@@ -72,3 +72,43 @@ test('SQLite retains submissions across restart without duplicating seed project
  const dir=mkdtempSync(join(tmpdir(),'portfolio-test-')),file=join(dir,'test.sqlite');
  try{let db=openDatabase(file);db.prepare('INSERT INTO messages(id,name,email,message) VALUES(?,?,?,?)').run('test-id',message.name,message.email,message.message);db.close();db=openDatabase(file);assert.equal(db.prepare('SELECT COUNT(*) n FROM messages').get().n,1);assert.equal(db.prepare('SELECT COUNT(*) n FROM projects').get().n,11);db.close();}finally{rmSync(dir,{recursive:true,force:true});}
 });
+const mail={notifyEmail:'owner@example.com',brevoApiKey:'test-key',brevoSenderEmail:'sender@example.com'};
+function mockFetch(t,ok=true){const calls=[];const original=globalThis.fetch;globalThis.fetch=async(url,init)=>{calls.push({url,body:JSON.parse(init.body)});return {ok,status:ok?201:500,text:async()=>'fail'};};t.after(()=>{globalThis.fetch=original;});return calls;}
+test('email-only mode sends before replying, stores nothing and exposes no inbox',async t=>{
+ const calls=mockFetch(t);
+ const {app,db}=fixture(t,{inbox:false,adminPassword:undefined,...mail}),client=request(app);
+ await client.get('/api/portfolio').expect(200);
+ const result=await post(client,'/api/contact',message).expect(201);
+ assert.ok(result.body.id);
+ assert.equal(calls.length,1);assert.equal(calls[0].body.to[0].email,mail.notifyEmail);assert.equal(calls[0].body.replyTo.email,message.email);
+ assert.equal(db.prepare('SELECT COUNT(*) n FROM messages').get().n,0);
+ await post(client,'/api/admin/login',{password}).expect(404);
+ await client.get('/api/admin/messages').expect(404);
+ await client.get('/admin').expect(404);
+ await client.get('/admin.html').expect(404);
+ await post(client,'/api/contact',{...message,email:'invalid'}).expect(400);
+ assert.equal(calls.length,1);
+});
+test('email-only mode reports a failed send instead of claiming success',async t=>{
+ mockFetch(t,false);
+ const {app}=fixture(t,{inbox:false,adminPassword:undefined,...mail});
+ const result=await post(request(app),'/api/contact',message).expect(502);
+ assert.match(result.body.error,/could not be sent/);
+});
+test('email-only mode without email settings keeps projects up but refuses contact',async t=>{
+ const calls=mockFetch(t);
+ const {app}=fixture(t,{inbox:false,adminPassword:undefined}),client=request(app);
+ assert.equal((await client.get('/api/portfolio').expect(200)).body.projects.length,11);
+ await post(client,'/api/contact',message).expect(503);
+ assert.equal(calls.length,0);
+});
+test('Vercel entry loads seeded projects in email-only mode',async t=>{
+ const keys=['NOTIFY_EMAIL','BREVO_API_KEY','BREVO_SENDER_EMAIL','APP_ORIGIN'],saved=Object.fromEntries(keys.map(k=>[k,process.env[k]]));
+ Object.assign(process.env,{NOTIFY_EMAIL:mail.notifyEmail,BREVO_API_KEY:mail.brevoApiKey,BREVO_SENDER_EMAIL:mail.brevoSenderEmail,APP_ORIGIN:'https://portfolio.example'});
+ t.after(()=>{for(const k of keys){if(saved[k]===undefined)delete process.env[k];else process.env[k]=saved[k];}});
+ const {default:app}=await import('../../api/index.mjs');
+ const result=await request(app).get('/api/portfolio').expect(200);
+ assert.equal(result.body.projects.length,11);
+ await request(app).get('/api/admin/session').expect(404);
+ await request(app).post('/api/contact').set('Origin',origin).send(message).expect(403);
+});
